@@ -29,14 +29,21 @@ black = np.ones((700,700,3), dtype=float)
 ll = np.ones((1,3), dtype=int)
 C=[]
 
+#исходное
+#
+# T=np.array([
+#     [1,0,0],
+#     [0, 1,0],
+#     [0, 0,1]
+# ])
 
 #передвижение
 
-T=np.array([
-    [1,0,0],
-    [0, 1,0],
-    [50, 50,1]
-])
+# T=np.array([
+#     [1,0,0],
+#     [0, 1,0],
+#     [50, 50,1]
+# ])
 
 #масштабирование
 
@@ -47,7 +54,7 @@ T=np.array([
 # ])
 
 #поворот
-
+#
 # T=np.array([
 #     [np.cos(np.pi/6),np.sin(np.pi/6),0],
 #     [-np.sin(np.pi/6), np.cos(np.pi/6),0],
@@ -57,11 +64,11 @@ T=np.array([
 
 #сдвиг
 
-# T=np.array([
-#     [1,np.tan(np.pi/4),0],
-#     [np.tan(np.pi/6), 1,0],
-#     [0, 0,1]
-# ])
+T=np.array([
+    [1,np.tan(np.pi/4),0],
+    [np.tan(np.pi/6), 1,0],
+    [0, 0,1]
+])
 
 
 for i in range(1,h+1):
