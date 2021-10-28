@@ -2,6 +2,14 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 
+def hand_image(image):
+    new_image = np.ones((320, 320, 3), dtype=float)
+    h, w = image.shape[:2]
+    for i in range(1, 257):
+        for j in range(1, 257):
+            image[i - 1][j - 1][0] = axis_x_4_new_image[i - 1]
+    return new_image
+
 def DCF(n):
     length = len(n)
     ll = []
@@ -28,19 +36,13 @@ def max_min(image):
     return min_max
 
 def hist2(image):
-    i=0
     Y, U, V = cv.split(image)
     hist_YUV = cv.calcHist([Y], [0], None, [256], [0, 256])
-    print(i)
-
     return hist_YUV
 
 def hist(image):
-    i=0
     Y, U, V = cv.split(image)
     hist_YUV = cv.calcHist([Y], [0], None, [256], [0, 256])
-    print(i)
-
     return hist_YUV
 
 image_orig = cv.imread('pic/pic1.jpg')
@@ -100,11 +102,10 @@ min_x_dark=max_min(image_dark_YUV)[1]
 max_x_low_k=max_min(image_low_k_YUV)[0]
 min_x_low_k=max_min(image_low_k_YUV)[1]
 
-image_orig_YUV_after=image_orig_YUV
 
 for i in range(h):
     for j in range(w):
-        image_orig_YUV_after[i][j][0] = ((image_orig_YUV[i][j][0] - min_x_orig) / (max_x_orig - min_x_orig)) * (255 - 0) + 0
+        image_orig_YUV[i][j][0] = ((image_orig_YUV[i][j][0] - min_x_orig) / (max_x_orig - min_x_orig)) * (255 - 0) + 0
         image_peresvet_YUV[i][j][0] = ((image_peresvet_YUV[i][j][0] - min_x_peresvet) / (max_x_peresvet - min_x_peresvet)) * (180 - 0) + 0
         image_dark_YUV[i][j][0] = ((image_dark_YUV[i][j][0] - min_x_dark) / (max_x_dark - min_x_dark)) * (250 - 0) + 0
         image_low_k_YUV[i][j][0] = ((image_low_k_YUV[i][j][0] - min_x_low_k) / (max_x_low_k - min_x_low_k)) * (255 - 0) + 0
