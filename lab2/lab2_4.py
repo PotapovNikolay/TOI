@@ -15,10 +15,12 @@ def max_min(image):
     return min_max
 
 def clah(image):
-    split = cv.split(image)
+    y,u,v = cv.split(image)
+
     clahe = cv.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-    split[0] = clahe.apply(split[0])
-    new_image = cv.merge(split)
+    y=clahe.apply(y)
+
+    new_image = cv.merge((y,u,v))
     return new_image
 
 def hist_before(image):
@@ -39,7 +41,6 @@ def dst_image(image, dst):
     for i in range(1,h+1):
         for j in range (1,w+1):
             image[i-1][j-1][0]=dst[i-1][j-1]
-    print(dst)
     return image
 
 def DCF(n):
