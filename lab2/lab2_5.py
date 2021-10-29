@@ -4,50 +4,146 @@ import matplotlib.pyplot as plt
 
 image = cv.imread("pic/pic1.jpg")
 cv.imshow("image_before", image)
-
+y,u,v = cv.split(image)
+print("y",len(y[0]))
 h,w = image.shape[:2]
 
 image_to_YUV = cv.cvtColor(image, cv.COLOR_BGR2YUV)
 
 size_blur=(5,5)
 
-core=[[0.1, 0.1, 0.1],
-    [0.1, 0.1, 0.1],
-    [0.1, 0.1, 0.1]]
-core_filter = np.array([
-    [0.1, 0.1, 0.1],
-    [0.1, 0.1, 0.1],
-    [0.1, 0.1, 0.1]
-])
+def mm(core,K):
+    for k in range(len(core)):
+        for l in range(len(core[k])):
+            core[k][l]=core[k][l]*K
+    return core
 
-a = (len(core) - 1) // 2
-b = (len(core[0]) - 1) // 2
+def mm_filter(c,K):
+    for i in core:
+        for j in core[i]:
+            core[i][j]=core[i][j]*K
+    return  core
 
-sum0=0
-sum1=0
-sum2=0
+#размытие
+# core_filter = np.array([
+#     [0.1, 0.1, 0.1],
+#     [0.1, 0.1, 0.1],
+#     [0.1, 0.1, 0.1]
+# ])
+# core_filter = np.array([[0.04, 0.04, 0.04, 0.04, 0.04],
+#         [0.04, 0.04, 0.04, 0.04, 0.04],
+#         [0.04, 0.04, 0.04, 0.04, 0.04],
+#         [0.04, 0.04, 0.04, 0.04, 0.04],
+#         [0.04, 0.04, 0.04, 0.04, 0.04]])
+#по гауссу
+# core_filter = np.array([[0.0625, 0.125, 0.0625],
+#         [0.125, 0.25, 0.125],
+#         [0.0625, 0.125, 0.0625]])
+# core_filter = np.array([[1, 4, 7, 4, 1],
+#                         [4, 16, 26, 16, 4],
+#                         [7, 26, 41, 26, 7],
+#                         [4, 16, 26, 16, 4],
+#                         [1, 4, 7, 4, 1]])
+# core_filter=mm_filter(core_filter,1/273)
 
-new_image=np.zeros((h,w,3), dtype=float)
+#dsd
+core_filter=np.eye(9)
 
 
-count_for = (h*w)//9
+flag=True
 
-for pic_y in range(h):
-    for pic_x in range(w):
-        for core_y in range(len(core)):
-            for core_x in range(len(core[core_y])):
-                sum0 += round(core[core_y ][core_x] * image[pic_x-core_y ][pic_y-core_x][0])
-                sum1 += round(core[core_y][core_x] * image[pic_x - core_y][pic_y - core_x][1])
-                sum2 += round(core[core_y][core_x] * image[pic_x - core_y][pic_y - core_x][2])
-        new_image[pic_x][pic_y][0] = sum0
-        new_image[pic_x][pic_y][1] = sum1
-        new_image[pic_x][pic_y][2] = sum2
-        sum0 = 0
-        sum1 = 0
-        sum2 = 0
+list_sum0 = []
+list_sum1 = []
+list_sum2 = []
+list_list_sum0=[]
+list_list_sum1=[]
+list_list_sum2=[]
 
 
-cv.imshow("image_after_hand", new_image)
+
+#размытие
+# core = [[0.1, 0.1, 0.1],
+#         [0.1, 0.1, 0.1],
+#         [0.1, 0.1, 0.1]]
+# core = [[0.04, 0.04, 0.04, 0.04, 0.04],
+#         [0.04, 0.04, 0.04, 0.04, 0.04],
+#         [0.04, 0.04, 0.04, 0.04, 0.04],
+#         [0.04, 0.04, 0.04, 0.04, 0.04],
+#         [0.04, 0.04, 0.04, 0.04, 0.04]]
+#по гауссу
+# core = [[0.0625, 0.125, 0.0625],
+#         [0.125, 0.25, 0.125],
+#         [0.0625, 0.125, 0.0625]]
+# core = [[1, 4, 7, 4, 1],
+#         [4, 16, 26, 16, 4],
+#         [7, 26, 41, 26, 7],
+#         [4, 16, 26, 16, 4],
+#         [1, 4, 7, 4, 1]]
+# core=mm(core,(1/273))
+
+#dsdsa
+core = np.eye(9).tolist()
+
+
+def pp(list_h, list_w):
+    sum0 = 0
+    sum1 = 0
+    sum2 = 0
+    global core
+    global list_sum0,list_sum1,list_sum2
+    for i in range(len(list_h)):
+        for j in range(len(list_w)):
+            for k in range(len(core)):
+                for l in range(len(core[k])):
+                    if i==k and j==l:
+                        sum0 += int(round(image[list_h[i]][list_w[j]][0] * core[k][l]))
+                        sum1 += int(round(image[list_h[i]][list_w[j]][1] * core[k][l]))
+                        sum2 += int(round(image[list_h[i]][list_w[j]][2] * core[k][l]))
+
+    list_sum0.append(sum0)
+    list_sum1.append(sum1)
+    list_sum2.append(sum2)
+
+    if len(list_sum0) == 320:
+
+        list_list_sum0.append(list_sum0)
+        list_sum0 = []
+
+    if len(list_sum1) == 320:
+        list_list_sum1.append(list_sum1)
+        list_sum1 = []
+
+    if len(list_sum2) == 320:
+        list_list_sum2.append(list_sum2)
+        list_sum2 = []
+
+
+
+list_h= np.arange(h)
+list_w=np.arange(w)
+
+for i in range(h*w):
+    if len(list_w)>0:
+        pp(list_h[:len(core)],list_w[:len(core)])
+        list_w= np.delete(list_w,[0])
+    elif len(list_w)==0:
+        list_w=np.arange(w)
+        list_h=np.delete(list_h,[0])
+
+
+
+print(len(list_list_sum0[0]))
+
+black = np.zeros((319,320,3), dtype=float)
+
+black[:,:,0]=list_list_sum0
+black[:,:,1]=list_list_sum1
+black[:,:,2]=list_list_sum2
+
+
+cv.imshow("after hand", black)
+cv.imwrite('pic/bb1.png',black)
+
 cv.imshow("image_after_def", cv.filter2D(image,-1,core_filter))
 cv.imshow("image_after_blur", cv.blur(image, size_blur, cv.BORDER_DEFAULT))
 
