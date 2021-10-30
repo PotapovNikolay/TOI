@@ -10,7 +10,7 @@ h,w = image.shape[:2]
 
 image_to_YUV = cv.cvtColor(image, cv.COLOR_BGR2YUV)
 
-size_blur=(5,5)
+
 
 def mm(core,K):
     for k in range(len(core)):
@@ -18,11 +18,12 @@ def mm(core,K):
             core[k][l]=core[k][l]*K
     return core
 
-def mm_filter(c,K):
-    for i in core:
-        for j in core[i]:
-            core[i][j]=core[i][j]*K
-    return  core
+def mm_filter(core,K):
+    new_core=np.array((5,5), dtype=float)
+    for i in range(5):
+        for j in range(5):
+            new_core[i][j]=core[i][j]*K
+    return new_core
 
 #размытие
 # core_filter = np.array([
@@ -35,6 +36,7 @@ def mm_filter(c,K):
 #         [0.04, 0.04, 0.04, 0.04, 0.04],
 #         [0.04, 0.04, 0.04, 0.04, 0.04],
 #         [0.04, 0.04, 0.04, 0.04, 0.04]])
+
 #по гауссу
 # core_filter = np.array([[0.0625, 0.125, 0.0625],
 #         [0.125, 0.25, 0.125],
@@ -44,10 +46,30 @@ def mm_filter(c,K):
 #                         [7, 26, 41, 26, 7],
 #                         [4, 16, 26, 16, 4],
 #                         [1, 4, 7, 4, 1]])
-# core_filter=mm_filter(core_filter,1/273)
+#
+#
+# core_filter=core_filter.tolist()
+#
+# core_filter= mm(core_filter, 1 / 273)
+#
+# core_filter=np.array(core_filter)
+# print(type(core_filter))
+
+#Резкость
+# core_filter =  np.array([[0, -1, 0],
+#         [-1, 5, -1],
+#         [0, -1, 0]])
+
+# core_filter = np.array([[1, 1, 1],
+#         [1,-7, 1],
+#         [1, 1, 1]])
+
+# core_filter = np.array([[-1, -1, -1],
+#         [-1, 9, -1],
+#         [-1, -1, -1]])
 
 #dsd
-core_filter=np.eye(9)
+#core_filter=np.eye(9)
 
 
 flag=True
@@ -65,11 +87,13 @@ list_list_sum2=[]
 # core = [[0.1, 0.1, 0.1],
 #         [0.1, 0.1, 0.1],
 #         [0.1, 0.1, 0.1]]
+
 # core = [[0.04, 0.04, 0.04, 0.04, 0.04],
 #         [0.04, 0.04, 0.04, 0.04, 0.04],
 #         [0.04, 0.04, 0.04, 0.04, 0.04],
 #         [0.04, 0.04, 0.04, 0.04, 0.04],
 #         [0.04, 0.04, 0.04, 0.04, 0.04]]
+
 #по гауссу
 # core = [[0.0625, 0.125, 0.0625],
 #         [0.125, 0.25, 0.125],
@@ -81,8 +105,24 @@ list_list_sum2=[]
 #         [1, 4, 7, 4, 1]]
 # core=mm(core,(1/273))
 
+#Резкость
+# core = [[0, -1, 0],
+#         [-1, 5, -1],
+#         [0, -1, 0]]
+
+# core = [[1, 1, 1],
+#         [1,-7, 1],
+#         [1, 1, 1]]
+
+# core = [[-1, -1, -1],
+#         [-1, 9, -1],
+#         [-1, -1, -1]]
+
+#оператор Собеля
+
+
 #dsdsa
-core = np.eye(9).tolist()
+#core = np.eye(9).tolist()
 
 
 def pp(list_h, list_w):
@@ -119,8 +159,8 @@ def pp(list_h, list_w):
 
 
 
-list_h= np.arange(h)
-list_w=np.arange(w)
+list_h = np.arange(h)
+list_w =np.arange(w)
 
 for i in range(h*w):
     if len(list_w)>0:
@@ -132,7 +172,6 @@ for i in range(h*w):
 
 
 
-print(len(list_list_sum0[0]))
 
 black = np.zeros((319,320,3), dtype=float)
 
@@ -142,9 +181,10 @@ black[:,:,2]=list_list_sum2
 
 
 cv.imshow("after hand", black)
-cv.imwrite('pic/bb1.png',black)
+cv.imwrite('pic/bb2.jpg',black)
 
 cv.imshow("image_after_def", cv.filter2D(image,-1,core_filter))
-cv.imshow("image_after_blur", cv.blur(image, size_blur, cv.BORDER_DEFAULT))
+cv.imshow("image_after_blur", cv.blur(image, (5,5), cv.BORDER_DEFAULT))
+cv.imshow("image_after_gaussian", cv.GaussianBlur(image,(5,5),cv.BORDER_DEFAULT))
 
 cv.waitKey(0)
