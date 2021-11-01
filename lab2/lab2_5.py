@@ -10,8 +10,6 @@ h,w = image.shape[:2]
 
 image_to_YUV = cv.cvtColor(image, cv.COLOR_BGR2YUV)
 
-
-
 def mm(core,K):
     for k in range(len(core)):
         for l in range(len(core[k])):
@@ -51,7 +49,7 @@ def mm_filter(core,K):
 # core_filter=core_filter.tolist()
 #
 # core_filter= mm(core_filter, 1 / 273)
-#
+# #
 # core_filter=np.array(core_filter)
 # print(type(core_filter))
 
@@ -64,9 +62,9 @@ def mm_filter(core,K):
 #         [1,-7, 1],
 #         [1, 1, 1]])
 
-# core_filter = np.array([[-1, -1, -1],
-#         [-1, 9, -1],
-#         [-1, -1, -1]])
+core_filter = np.array([[-1, -1, -1],
+        [-1, 9, -1],
+        [-1, -1, -1]])
 
 #dsd
 #core_filter=np.eye(9)
@@ -114,16 +112,19 @@ list_list_sum2=[]
 #         [1,-7, 1],
 #         [1, 1, 1]]
 
-# core = [[-1, -1, -1],
-#         [-1, 9, -1],
-#         [-1, -1, -1]]
+core = [[-1, -1, -1],
+        [-1, 9, -1],
+        [-1, -1, -1]]
 
 #оператор Собеля
-
+# core = [[0,1,0],
+#                 [1,-4,1],
+#                 [0,1,0]]
 
 #dsdsa
 #core = np.eye(9).tolist()
 
+print(core)
 
 def pp(list_h, list_w):
     sum0 = 0
@@ -171,8 +172,6 @@ for i in range(h*w):
         list_h=np.delete(list_h,[0])
 
 
-
-
 black = np.zeros((319,320,3), dtype=float)
 
 black[:,:,0]=list_list_sum0
@@ -184,7 +183,7 @@ cv.imshow("after hand", black)
 cv.imwrite('pic/bb2.jpg',black)
 
 cv.imshow("image_after_def", cv.filter2D(image,-1,core_filter))
-cv.imshow("image_after_blur", cv.blur(image, (5,5), cv.BORDER_DEFAULT))
-cv.imshow("image_after_gaussian", cv.GaussianBlur(image,(5,5),cv.BORDER_DEFAULT))
+#cv.imshow("image_after_blur", cv.blur(image, (5,5), cv.BORDER_DEFAULT))
+#cv.imshow("image_after_gaussian", cv.GaussianBlur(image,(5,5),cv.BORDER_DEFAULT))
 
 cv.waitKey(0)
