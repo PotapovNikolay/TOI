@@ -2,14 +2,13 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 
-image = cv.imread('pic/ap.jpg')
-#cv.imshow("pic",image)
-h,w = image.shape[:2]
+image = cv.imread('pic/pic1.jpg')
 
+h,w = image.shape[:2]
+cv.imshow("orig", image)
 RGB_image = cv.cvtColor(image,cv.COLOR_BGR2RGB)
 blue, green, red = cv.split(image)
 
-#cv.imshow("sd",blue)
 colors = ['#FF7382','#9CFF8C','#75B1FF']
 
 plt.hist([red.ravel(),green.ravel(),blue.ravel()], 256, [0, 256], color=[colors[0], colors[1], colors[2]])
@@ -18,7 +17,7 @@ plt.title ("Гистограмма plt")
 hist_blue = cv.calcHist([blue], [0], None, [256], [0, 256])
 hist_green = cv.calcHist([green], [0], None, [256], [0, 256])
 hist_red = cv.calcHist([red], [0], None, [256], [0, 256])
-#hist_cv=cv.calcHist([image],[0,1,2], None, [256,256,256], [0, 256,0, 256,0, 256] )
+hist_cv=cv.calcHist([image],[0,1,2], None, [256,256,256], [0, 256,0, 256,0, 256] )
 
 plt.figure ()
 plt.title ("Гистограмма opencv")
