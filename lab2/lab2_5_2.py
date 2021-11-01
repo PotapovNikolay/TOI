@@ -13,12 +13,16 @@ print(image[0][0])
 
 plt.subplot(121), plt.imshow(cv.cvtColor(image, cv.COLOR_BGR2RGB)), plt.title('исходное изображение'), plt.axis('off')
 
+
+
 image=cv.cvtColor(image, cv.COLOR_BGR2RGB)
+
+image =  cv.GaussianBlur(image,(5,5),cv.BORDER_DEFAULT)
 
 image=cv.cvtColor(image, cv.COLOR_RGB2GRAY)
 
 
-dst = cv.Laplacian(image, cv.CV_16S, ksize=3)
+dst = cv.Laplacian(image, cv.CV_16S, ksize=5)
 Laplacian = cv.convertScaleAbs(dst)
 
 plt.subplot (122), plt.imshow (Laplacian, cmap = plt.cm.gray), plt.title ('оператор Лапласа'), plt.axis ('off')
@@ -37,6 +41,8 @@ core_laplacian = [
                 [-1,-2,-17,-2,-1],
                 [0,-1,-2,-1,0],
                 [0,0,-1,0,0]]
+
+
 
 flag=True
 
@@ -69,9 +75,7 @@ def pp(list_h, list_w):
             for k in range(len(core_laplacian)):
                 for l in range(len(core_laplacian[k])):
                     if i==k and j==l:
-                        sum0+=round(image[list_h[i]][list_w[j]] * core_laplacian[k][l])
-
-
+                        sum0+=image[list_h[i]][list_w[j]] * core_laplacian[k][l]
 
     list_sum0.append(sum0)
 
@@ -107,10 +111,10 @@ black[:,:,0]=list_list_sum0
 
 black=black.astype('float32')
 
-for i in range(319):
-    for j in range(320):
-        image[i][j] +=-1*black[i][j]
-        black[i][j]=image[i][j]
+# for i in range(319):
+#     for j in range(320):
+#         image[i][j] +=-1*black[i][j]
+#         black[i][j]=image[i][j]
 
 cv.imshow("after hand", cv.cvtColor(black, cv.COLOR_GRAY2BGR))
 cv.imwrite('pic/bb3.png',cv.cvtColor(black, cv.COLOR_GRAY2BGR))
