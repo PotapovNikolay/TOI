@@ -21,9 +21,6 @@ list_list_sum2=[]
 
 
 def pp(list_h, list_w):
-    # sum0 = 0
-    # sum1 = 0
-    # sum2 = 0
     sum0 = []
     sum1 = []
     sum2 = []
@@ -65,7 +62,7 @@ list_w =np.arange(w)
 
 for i in range(h*w):
     if len(list_w)>0:
-        pp(list_h[:3],list_w[:3])
+        pp(list_h[:5],list_w[:5])
         list_w= np.delete(list_w,[0])
     elif len(list_w)==0:
         list_w=np.arange(w)
